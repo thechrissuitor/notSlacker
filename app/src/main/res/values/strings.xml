@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">Not Slacker</string>
+    <string name="app_name">!Slacker</string>
+    <string name="slack_title_label">Assignment:</string>
+    <string name="slack_title_hint">What needs to be completed?</string>
+    <string name="slack_description_label">Description</string>
+    <string name="slack_description_hint">Enter details of the assignment...</string>
+    <string name="slack_completed_label">Completed</string>
+    <string name="due_date_title_label">Due Date:</string>
 </resources>
