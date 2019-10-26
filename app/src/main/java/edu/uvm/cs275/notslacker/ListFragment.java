@@ -26,7 +26,6 @@ public class ListFragment extends Fragment {
     // create a RecyclerView.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        Log.d("test", "I made it!");
         View view = inflater.inflate(R.layout.fragment_slack_list, container, false);
 
         mList = (RecyclerView) view.findViewById(R.id.slack_recycler_view);
