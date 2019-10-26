@@ -40,7 +40,7 @@ public class PagerActivity extends AppCompatActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.slack_view_pager);
 
-        mSlacks = SlackLab.get(this).getCrimes(); // get the list of crimes
+        mSlacks = SlackLab.get(this).getSlacks(); // get the list of slacks
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         /*  FragmentSatePagerAdaper is the agent managing the conversation with ViewPager.

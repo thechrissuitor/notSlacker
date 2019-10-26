@@ -6,4 +6,5 @@
     <string name="slack_description_hint">Enter details of the assignment...</string>
     <string name="slack_completed_label">Completed</string>
     <string name="due_date_title_label">Due Date:</string>
+    <string name="date_picker_title">Select a Due Date</string>
 </resources>

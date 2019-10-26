@@ -2,6 +2,7 @@ package edu.uvm.cs275.notslacker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +21,43 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     private RecyclerView mList;
-    //private SlackAdapter mAdapter;
+    private SlackAdapter mAdapter;
 
     // create a RecyclerView.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        Log.d("test", "I made it!");
         View view = inflater.inflate(R.layout.fragment_slack_list, container, false);
 
         mList = (RecyclerView) view.findViewById(R.id.slack_recycler_view);
         // RecycleView's require a LayoutManger to work.
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //updateUI();
+        updateUI();
 
         return view;
+    }
+
+    /* Add additional functionality to onResume().
+     *  It now calls updateUI().*/
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateUI();
+    }
+
+    /* This method connects the Adapter to the RecyclerView.
+     * Sets up ListFragment's.*/
+    private void updateUI(){
+        SlackLab crimeLab = SlackLab.get(getActivity());
+        List<Slack> slacks = crimeLab.getSlacks();
+
+        if(mAdapter == null){
+            mAdapter = new SlackAdapter(slacks);
+            mList.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     // Create a ViewHolder to inflate and own the layout.

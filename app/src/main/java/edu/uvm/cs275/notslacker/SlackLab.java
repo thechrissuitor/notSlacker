@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,8 @@ public class SlackLab {
         mSlacks = new ArrayList<>();
         for (int i=0; i<100; i++){
             Slack slack = new Slack();
-            slack.setTitle("Crime #" + i);
+            slack.setTitle("Assignment #" + i);
+            slack.setDueDate(new Date());
             slack.setCompleted(i % 2 == 0); // Every other slack will be completed
             mSlacks.add(slack);
         }
