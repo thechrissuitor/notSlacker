@@ -1,6 +1,7 @@
 package edu.uvm.cs275.notslacker;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -16,14 +17,19 @@ public class SlackLab {
     private static SlackLab sSlackLab;
 
     private List<Slack> mSlacks;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     private static final String TAG = "SlackLab";
 
     /*
      * CONSTRUCTOR
-     * Populate the mSlacks list with 100 arbitrarily generated slacks.
      */
     private SlackLab(Context context){
+        // database stuff
+        mContext = context.getApplicationContext();
+        mDatabase = new SlackBaseHelper(mContext).getWritableDatabase();
+        // Populate the mSlacks list with 100 arbitrarily generated slacks.
         mSlacks = new ArrayList<>();
         for (int i=0; i<100; i++){
             Slack slack = new Slack();
