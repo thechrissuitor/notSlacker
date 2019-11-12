@@ -37,6 +37,13 @@ public class SlackFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        SlackLab.get(getActivity()).updateSlack(mSlack); // update the database
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 

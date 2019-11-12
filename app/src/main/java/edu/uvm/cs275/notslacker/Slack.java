@@ -11,8 +11,12 @@ public class Slack {
     private boolean mCompleted;
 
     public Slack(){
-        mID = UUID.randomUUID();
-        mCompleted = false;
+        this(UUID.randomUUID());
+    }
+
+    public Slack(UUID id) {
+        mID = id;
+        mDueDate = new Date();
     }
 
     public UUID getID() {
