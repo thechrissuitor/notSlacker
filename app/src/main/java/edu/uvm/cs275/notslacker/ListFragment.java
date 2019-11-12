@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,6 +81,7 @@ public class ListFragment extends Fragment {
      * Let's the app to respond to selection
      * of the MenuItem by creating a new Slack, adding it to SlackLab, and then starting an instance of
      * PagerActivity to edit the new Slack.
+     * Also, responds to the "Show Subtitle" button.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,6 +91,9 @@ public class ListFragment extends Fragment {
                 SlackLab.get(getActivity()).addCrime(slack);
                 Intent intent = PagerActivity.newIntent(getActivity(), slack.getID());
                 startActivity(intent);
+                return true;
+            case R.id.show_subtitle:
+                updateSubtitle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,5 +165,15 @@ public class ListFragment extends Fragment {
             return mSlacks.size();
         }
     }
+
+    //  set the subtitle of the toolbar to display the number of crimes
+    private void updateSubtitle() {
+        SlackLab slackLab = SlackLab.get(getActivity());
+        int slackCount = slackLab.getSlacks().size();
+        String subtitle = getString(R.string.subtitle_format, slackCount);
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
+    }
+
 
 }
