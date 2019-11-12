@@ -26,6 +26,8 @@ public class ListFragment extends Fragment {
 
     private RecyclerView mList;
     private SlackAdapter mAdapter;
+    private boolean mSubtitleVisible;
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
     // create a RecyclerView.
     @Override
@@ -35,6 +37,11 @@ public class ListFragment extends Fragment {
         mList = (RecyclerView) view.findViewById(R.id.slack_recycler_view);
         // RecycleView's require a LayoutManger to work.
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if (savedInstanceState != null) {
+            mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
+        }
+
 
         updateUI();
 
@@ -49,6 +56,13 @@ public class ListFragment extends Fragment {
         updateUI();
     }
 
+    // this method saves the state of the subtitle
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+    }
+
     /* This method connects the Adapter to the RecyclerView.
      * Sets up ListFragment's.*/
     private void updateUI(){
@@ -61,6 +75,8 @@ public class ListFragment extends Fragment {
         } else {
             mAdapter.notifyDataSetChanged();
         }
+
+        updateSubtitle();
     }
 
     // called when a menu is needed
@@ -68,6 +84,14 @@ public class ListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_slack_list, menu);
+
+        // show or hide the "Show Subtitle" button
+        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+        if (mSubtitleVisible) {
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        } else {
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
     }
 
     // let's ListFragment know that it needs to receive menu callbacks
@@ -93,6 +117,8 @@ public class ListFragment extends Fragment {
                 startActivity(intent);
                 return true;
             case R.id.show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
                 updateSubtitle();
                 return true;
             default:
@@ -171,6 +197,11 @@ public class ListFragment extends Fragment {
         SlackLab slackLab = SlackLab.get(getActivity());
         int slackCount = slackLab.getSlacks().size();
         String subtitle = getString(R.string.subtitle_format, slackCount);
+
+        if (!mSubtitleVisible) {
+            subtitle = null;
+        }
+
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
