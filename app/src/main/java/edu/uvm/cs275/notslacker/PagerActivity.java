@@ -25,7 +25,7 @@ public class PagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private List<Slack> mSlacks;
 
-    public static Intent newInent(Context packageContext, UUID slackID) {
+    public static Intent newIntent(Context packageContext, UUID slackID) {
         Intent intent = new Intent(packageContext, PagerActivity.class);
         intent.putExtra(EXTRA_SLACK_ID, slackID);
         return intent;

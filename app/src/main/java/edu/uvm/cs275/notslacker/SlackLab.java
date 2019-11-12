@@ -31,13 +31,6 @@ public class SlackLab {
         mDatabase = new SlackBaseHelper(mContext).getWritableDatabase();
         // Populate the mSlacks list with 100 arbitrarily generated slacks.
         mSlacks = new ArrayList<>();
-        for (int i=0; i<100; i++){
-            Slack slack = new Slack();
-            slack.setTitle("Assignment #" + i);
-            slack.setDueDate(new Date());
-            slack.setCompleted(i % 2 == 0); // Every other slack will be completed
-            mSlacks.add(slack);
-        }
     }
 
     /*
@@ -55,6 +48,11 @@ public class SlackLab {
     // Return the mSlacks list
     public List<Slack> getSlacks(){
         return mSlacks;
+    }
+
+    // add a Slack
+    public void addCrime(Slack s) {
+        mSlacks.add(s);
     }
 
     /*

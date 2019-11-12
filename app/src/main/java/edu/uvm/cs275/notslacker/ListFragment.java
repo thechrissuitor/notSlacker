@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,8 +51,8 @@ public class ListFragment extends Fragment {
     /* This method connects the Adapter to the RecyclerView.
      * Sets up ListFragment's.*/
     private void updateUI(){
-        SlackLab crimeLab = SlackLab.get(getActivity());
-        List<Slack> slacks = crimeLab.getSlacks();
+        SlackLab slackLab = SlackLab.get(getActivity());
+        List<Slack> slacks = slackLab.getSlacks();
 
         if(mAdapter == null){
             mAdapter = new SlackAdapter(slacks);
@@ -58,6 +61,40 @@ public class ListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    // called when a menu is needed
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_slack_list, menu);
+    }
+
+    // let's ListFragment know that it needs to receive menu callbacks
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    /*
+     * Let's the app to respond to selection
+     * of the MenuItem by creating a new Slack, adding it to SlackLab, and then starting an instance of
+     * PagerActivity to edit the new Slack.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_slack:
+                Slack slack = new Slack();
+                SlackLab.get(getActivity()).addCrime(slack);
+                Intent intent = PagerActivity.newIntent(getActivity(), slack.getID());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     // Create a ViewHolder to inflate and own the layout.
     private class SlackHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -81,11 +118,11 @@ public class ListFragment extends Fragment {
         @Override
         public void onClick(View view){
             // make a fragment
-            Intent intent = PagerActivity.newInent(getActivity(), mSlack.getID()); // pressing a list item in CrimeListFragment starts an instance of CrimePagerActivity
+            Intent intent = PagerActivity.newIntent(getActivity(), mSlack.getID()); // pressing a list item in ListFragment starts an instance of PagerActivity
             startActivity(intent);
         }
 
-        // this method is called each time a new Crime should be displayed.
+        // this method is called each time a new Slack should be displayed.
         public void bind(Slack slack){
             mSlack = slack;
             mTitleTextView.setText(mSlack.getTitle());
