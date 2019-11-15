@@ -73,6 +73,7 @@ public class ListFragment extends Fragment {
             mAdapter = new SlackAdapter(slacks);
             mList.setAdapter(mAdapter);
         } else {
+            mAdapter.setSlacks(slacks);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -112,7 +113,7 @@ public class ListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.new_slack:
                 Slack slack = new Slack();
-                SlackLab.get(getActivity()).addCrime(slack);
+                SlackLab.get(getActivity()).addSlack(slack);
                 Intent intent = PagerActivity.newIntent(getActivity(), slack.getID());
                 startActivity(intent);
                 return true;
@@ -190,6 +191,11 @@ public class ListFragment extends Fragment {
         public int getItemCount(){
             return mSlacks.size();
         }
+
+        public void setSlacks(List<Slack> crimes) {
+            mSlacks = crimes;
+        }
+
     }
 
     //  set the subtitle of the toolbar to display the number of crimes

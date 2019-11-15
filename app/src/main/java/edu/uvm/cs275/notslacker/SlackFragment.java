@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +35,7 @@ public class SlackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         UUID slackID = (UUID) getArguments().getSerializable(ARG_SLACK_ID);
         mSlack = SlackLab.get(getActivity()).getSlack(slackID);
     }
@@ -42,6 +46,28 @@ public class SlackFragment extends Fragment {
         SlackLab.get(getActivity()).updateSlack(mSlack); // update the database
     }
 
+    // called when a menu is needed
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_detail_view_menu, menu);
+    }
+
+    /*
+     * Let's the app to respond to selection
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_slack:
+                SlackLab.get(getActivity()).deleteSlack(mSlack);
+                Intent intent = new Intent(getActivity(), ListActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

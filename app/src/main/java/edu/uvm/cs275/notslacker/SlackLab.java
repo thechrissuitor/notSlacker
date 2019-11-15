@@ -47,9 +47,26 @@ public class SlackLab {
         return sSlackLab;
     }
 
-    // Return the mSlacks list
+    // get the slacks from the database
+    /*
+    * "Database cursors are called cursors because they always have their finger on a particular place in a
+    *  query. So to pull the data out of a cursor, you move it to the first element by calling moveToFirst(),
+    *  and then read in row data. Each time you want to advance to a new row, you call moveToNext(), until
+    *  finally isAfterLast() tells you that your pointer is off the end of the data set."
+    */
     public List<Slack> getSlacks(){
-        return new ArrayList<>();
+        List<Slack> slacks = new ArrayList<>();
+        SlackCursorWrapper cursor = querySlacks(null, null);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                slacks.add(cursor.getSlack());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return slacks;
     }
 
     // add a Slack
@@ -58,12 +75,30 @@ public class SlackLab {
         mDatabase.insert(SlackTable.NAME, null, values);
     }
 
+    // delete a slack from the database
+    public void deleteSlack(Slack s) {
+        mDatabase.delete(SlackTable.NAME, "uuid=?", new String[] { s.getID().toString() });
+    }
+
     /*
      * @param: UUID id = the id of the slack you are looking
      * @return: return the slack that has the id of the param
+     * Loops through the database to find the correct assignment.
      */
     public Slack getSlack(UUID id){
-        return null;
+        SlackCursorWrapper cursor = querySlacks(
+                SlackTable.Cols.UUID + " = ?",
+                new String[] { id.toString() }
+        );
+        try {
+            if (cursor.getCount() == 0) {
+                return null;
+            }
+            cursor.moveToFirst();
+            return cursor.getSlack();
+        } finally {
+            cursor.close();
+        }
     }
 
     // update the table where slack UUID == database UUID
@@ -74,7 +109,7 @@ public class SlackLab {
     }
 
     // receiving a data query
-    private Cursor queryCrimes(String whereClause, String[] whereArgs) {
+    private SlackCursorWrapper querySlacks(String whereClause, String[] whereArgs) {
         Cursor cursor = mDatabase.query(
                 SlackTable.NAME,
                 null, // columns - null selects all columns
@@ -84,7 +119,7 @@ public class SlackLab {
                 null, // having
                 null // orderBy
         );
-        return cursor;
+        return new SlackCursorWrapper(cursor);
     }
 
     // The values that will be inserted into the database.
